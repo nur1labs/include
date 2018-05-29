@@ -1,6 +1,6 @@
 #pragma once
 
-#include "common/ObserverManager.h"
+#include "ObserverManager.h"
 
 namespace CryptoNote {
 
