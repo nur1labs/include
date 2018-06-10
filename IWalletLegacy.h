@@ -10,6 +10,7 @@
 #include <vector>
 
 #include "CryptoNote.h"
+#include "CryptoTypes.h"
 
 namespace CryptoNote {
 
@@ -101,6 +102,8 @@ public:
   virtual void removeObserver(IWalletLegacyObserver* observer) = 0;
 
   virtual void initAndGenerate(const std::string& password) = 0;
+  virtual void initAndGenerateDeterministic(const std::string& password) = 0;
+  virtual Crypto::SecretKey generateKey(const std::string& password, const Crypto::SecretKey& recovery_param = Crypto::SecretKey(), bool recover = false, bool two_random = false) = 0;
   virtual void initAndLoad(std::istream& source, const std::string& password) = 0;
   virtual void initWithKeys(const AccountKeys& accountKeys, const std::string& password) = 0;
   virtual void shutdown() = 0;
@@ -114,6 +117,7 @@ public:
 
   virtual uint64_t actualBalance() = 0;
   virtual uint64_t pendingBalance() = 0;
+  virtual uint64_t dustBalance() = 0;
   virtual uint64_t actualDepositBalance() = 0;
   virtual uint64_t pendingDepositBalance() = 0;
 
@@ -128,13 +132,16 @@ public:
   virtual bool getDeposit(DepositId depositId, Deposit& deposit) = 0;
   virtual std::vector<Payments> getTransactionsByPaymentIds(const std::vector<PaymentId>& paymentIds) const = 0;
 
-  virtual TransactionId sendTransaction(const WalletLegacyTransfer& transfer, uint64_t fee, const std::string& extra = "", uint64_t mixIn = 0, uint64_t unlockTimestamp = 0, const std::vector<TransactionMessage>& messages = std::vector<TransactionMessage>(), uint64_t ttl = 0) = 0;
-  virtual TransactionId sendTransaction(const std::vector<WalletLegacyTransfer>& transfers, uint64_t fee, const std::string& extra = "", uint64_t mixIn = 0, uint64_t unlockTimestamp = 0, const std::vector<TransactionMessage>& messages = std::vector<TransactionMessage>(), uint64_t ttl = 0) = 0;
+  virtual TransactionId sendTransaction(const WalletLegacyTransfer& transfer, uint64_t fee, const std::string& extra = "", uint64_t mixIn = 0, uint64_t unlockTimestamp = 0) = 0;
+  virtual TransactionId sendTransaction(const std::vector<WalletLegacyTransfer>& transfers, uint64_t fee, const std::string& extra = "", uint64_t mixIn = 0, uint64_t unlockTimestamp = 0) = 0;
+  virtual TransactionId sendDustTransaction(const WalletLegacyTransfer& transfer, uint64_t fee, const std::string& extra = "", uint64_t mixIn = 0, uint64_t unlockTimestamp = 0) = 0;
+  virtual TransactionId sendDustTransaction(const std::vector<WalletLegacyTransfer>& transfers, uint64_t fee, const std::string& extra = "", uint64_t mixIn = 0, uint64_t unlockTimestamp = 0) = 0;
   virtual TransactionId deposit(uint32_t term, uint64_t amount, uint64_t fee, uint64_t mixIn = 0) = 0;
   virtual TransactionId withdrawDeposits(const std::vector<DepositId>& depositIds, uint64_t fee) = 0;
   virtual std::error_code cancelTransaction(size_t transferId) = 0;
 
   virtual void getAccountKeys(AccountKeys& keys) = 0;
+  virtual bool getSeed(std::string& electrum_words) = 0;
 };
 
 }
