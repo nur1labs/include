@@ -23,7 +23,6 @@ struct TransactionInformation {
   uint64_t totalAmountOut;
   std::vector<uint8_t> extra;
   Crypto::Hash paymentId;
-  std::vector<std::string> messages;
 };
 
 
